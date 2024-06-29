@@ -27,7 +27,7 @@ public class ReportSchedular {
     @Scheduled(fixedRate = 60000) // tiap 10 detik generate report
     public void generateReport() {
         log.info("Running scheduler");
-        Boolean locoRunning = locomotifService.updateSummaryData();
+        boolean locoRunning = locomotifService.updateSummaryData();
         if (locoRunning) {
             Optional<LocomotifSummary> summaryOptional = locomotifSummaryRepository.findFirstByOrderByLastModifiedTimeDesc();
             if (summaryOptional.isPresent()) {
