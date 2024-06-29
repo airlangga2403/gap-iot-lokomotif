@@ -1,11 +1,13 @@
 package com.iot.springbootcreatereport.config;
 
+import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Component;
 import org.telegram.abilitybots.api.bot.AbilityBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 @Component
+@Log4j2
 public class TelegramBot extends AbilityBot {
 
     public TelegramBot() {
@@ -25,7 +27,7 @@ public class TelegramBot extends AbilityBot {
         try {
             execute(message);
         } catch (TelegramApiException e) {
-            e.printStackTrace();
+          log.error(e.getMessage());
         }
     }
 }
