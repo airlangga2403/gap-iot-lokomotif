@@ -19,50 +19,36 @@ pipeline {
         success {
             script {
                 def commitAuthorName = sh(script: 'git log -1 --pretty=format:"%an"', returnStdout: true).trim()
+                echo "Commit Author Name: ${commitAuthorName}"
+
                 def commitAuthorEmail = sh(script: 'git log -1 --pretty=format:"%ae"', returnStdout: true).trim()
+                echo "Commit Author Email: ${commitAuthorEmail}"
+
                 def commitMessage = sh(script: 'git log -1 --pretty=format:"%s"', returnStdout: true).trim()
+                echo "Commit Message: ${commitMessage}"
+
                 def branchName = sh(script: 'git rev-parse --abbrev-ref HEAD', returnStdout: true).trim()
+                echo "Branch Name: ${branchName}"
 
-                // Constructing multi-line message
-                def message = """
-                    Build Success Notification
-                    ==========================
-                    User Name: ${commitAuthorName}
-                    Email: ${commitAuthorEmail}
-                    Action: Build and Test
-                    Branch: ${branchName}
-                    Commit Message: ${commitMessage}
-                """.stripIndent()
+                def message = new StringBuilder()
+                message.append("Build Success Notification\\n")
+                message.append("==========================\\n")
+                message.append("User Name ${commitAuthorName}\\n")
+                message.append("Email ${commitAuthorEmail}\\n")
+                message.append("Action Build and Test\\n")
+                message.append("Branch ${branchName}\\n")
+                message.append("Commit Message ${commitMessage}")
+                echo "${message}"
 
-                // Escaping double quotes and backslashes in the message for JSON
-                message = message.replaceAll('"', '\\\\"')
+                // Replace line breaks with \n for JSON compatibility
+                def jsonMessage = message.toString()
 
-                // Construct JSON payload for curl command
-                def payload = """
-                    {
-                        "chat_id": "${CHAT_ID}",
-                        "text": "${message}",
-                        "disable_notification": false
-                    }
-                """.stripIndent()
-
-                // Execute curl command to send the message
-                bat "curl -X POST -H 'Content-Type: application/json' -d '${payload}' https://api.telegram.org/bot${TOKEN}/sendMessage"
+                bat "curl -X POST -H \"Content-Type: application/json\" -d \"{\\\"chat_id\\\":${CHAT_ID}, \\\"text\\\": \\\"${jsonMessage}\\\", \\\"disable_notification\\\": false}\" https://api.telegram.org/bot${TOKEN}/sendMessage"
             }
         }
         failure {
             script {
-                // Construct JSON payload for failure message (if needed)
-                def failureMessage = """
-                    {
-                        "chat_id": "${CHAT_ID}",
-                        "text": "Pipeline failed!",
-                        "disable_notification": false
-                    }
-                """.stripIndent()
-
-                // Execute curl command to send failure message (if needed)
-                bat "curl -X POST -H 'Content-Type: application/json' -d '${failureMessage}' https://api.telegram.org/bot${TOKEN}/sendMessage"
+                bat "curl -X POST -H \"Content-Type: application/json\" -d \"{\\\"chat_id\\\":${CHAT_ID}, \\\"text\\\": \\\"Pipeline failed!\\\", \\\"disable_notification\\\": false}\" https://api.telegram.org/bot${TOKEN}/sendMessage"
             }
         }
     }
