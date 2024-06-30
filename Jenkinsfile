@@ -30,13 +30,13 @@ pipeline {
                 def branchName = sh(script: 'git rev-parse --abbrev-ref HEAD', returnStdout: true).trim()
                 echo "Branch Name: ${branchName}"
 
-def message = "Build Success Notification\n" +
-                              "==========================\n" +
-                              "User Name: ${commitAuthorName}\n" +
-                              "Email: ${commitAuthorEmail}\n" +
-                              "Action: Build and Test\n" +
-                              "Branch: ${branchName}\n" +
-                              "Commit Message: ${commitMessage}"
+   def message = "Build Success Notification\n
+                             ==========================\n
+                              User Name: ${commitAuthorName}\n
+                              Email: ${commitAuthorEmail}\n
+                              Action: Build and Test\n
+                              Branch: ${branchName}\n
+                              Commit Message: ${commitMessage}"
 
                 bat "curl -X POST -H \"Content-Type: application/json\" -d \"{\\\"chat_id\\\":${CHAT_ID}, \\\"text\\\": \\\"${message}\\\", \\\"disable_notification\\\": false}\" https://api.telegram.org/bot${TOKEN}/sendMessage"
             }
