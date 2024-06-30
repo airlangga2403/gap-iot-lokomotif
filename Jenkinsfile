@@ -23,7 +23,7 @@ pipeline {
                 def commitMessage = sh(script: 'git log -1 --pretty=format:"%s"', returnStdout: true).trim()
                 def branchName = sh(script: 'git rev-parse --abbrev-ref HEAD', returnStdout: true).trim()
 
-                def message = """\
+ def message = """
 *Build Success Notification*
 ==========================
 *User Name:* ${commitAuthorName}
@@ -43,8 +43,8 @@ pipeline {
                 def commitMessage = sh(script: 'git log -1 --pretty=format:"%s"', returnStdout: true).trim()
                 def branchName = sh(script: 'git rev-parse --abbrev-ref HEAD', returnStdout: true).trim()
 
-                def message = """\
-*Build Failure Notification*
+ def message = """
+*Build Success Notification*
 ==========================
 *User Name:* ${commitAuthorName}
 *Email:* ${commitAuthorEmail}
