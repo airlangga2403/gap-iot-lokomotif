@@ -37,7 +37,7 @@ pipeline {
         }
         failure {
             script {
-                // bat "curl -X POST -H \"Content-Type: application/json\" -d \"{\\\"chat_id\\\":${CHAT_ID}, \\\"text\\\": \\\"Pipeline failed!\\\", \\\"disable_notification\\\": false}\" https://api.telegram.org/bot${TOKEN}/sendMessage"
+                echo "failed"
             }
         }
     }
