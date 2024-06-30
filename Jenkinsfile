@@ -31,13 +31,13 @@ pipeline {
                 echo "Branch Name: ${branchName}"
 
                 def message = """
-*Build Success Notification*
+Build Success Notification
 ==========================
-*User Name:* ${commitAuthorName}
-*Email:* ${commitAuthorEmail}
-*Action:* Build and Test
-*Branch:* ${branchName}
-*Commit Message:* ${commitMessage}
+User Name: ${commitAuthorName}
+Email: ${commitAuthorEmail}
+Action: Build and Test
+Branch: ${branchName}
+Commit Message: ${commitMessage}
 """
 
                 bat "curl -X POST -H \"Content-Type: application/json\" -d \"{\\\"chat_id\\\":${CHAT_ID}, \\\"text\\\": \\\"${message}\\\", \\\"disable_notification\\\": false}\" https://api.telegram.org/bot${TOKEN}/sendMessage"
