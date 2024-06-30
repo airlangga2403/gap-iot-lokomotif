@@ -18,9 +18,9 @@ pipeline {
     post {
         success {
             script {
-                def commitAuthorName = bat(script: 'git log -1 --pretty=format:%an', returnStdout: true).trim()
-                def commitAuthorEmail = bat(script: 'git log -1 --pretty=format:%ae', returnStdout: true).trim()
-                def commitMessage = bat(script: 'git log -1 --pretty=%B', returnStdout: true).trim()
+                def commitAuthorName = bat(script: 'git log -1 --pretty=format:"%an"', returnStdout: true).trim()
+                def commitAuthorEmail = bat(script: 'git log -1 --pretty=format:"%ae"', returnStdout: true).trim()
+                def commitMessage = bat(script: 'git log -1 --pretty=format:"%s"', returnStdout: true).trim()
                 def branchName = bat(script: 'git rev-parse --abbrev-ref HEAD', returnStdout: true).trim()
 
                 def message = """\
@@ -38,9 +38,9 @@ pipeline {
         }
         failure {
             script {
-                def commitAuthorName = bat(script: 'git log -1 --pretty=format:%an', returnStdout: true).trim()
-                def commitAuthorEmail = bat(script: 'git log -1 --pretty=format:%ae', returnStdout: true).trim()
-                def commitMessage = bat(script: 'git log -1 --pretty=%B', returnStdout: true).trim()
+                def commitAuthorName = bat(script: 'git log -1 --pretty=format:"%an"', returnStdout: true).trim()
+                def commitAuthorEmail = bat(script: 'git log -1 --pretty=format:"%ae"', returnStdout: true).trim()
+                def commitMessage = bat(script: 'git log -1 --pretty=format:"%s"', returnStdout: true).trim()
                 def branchName = bat(script: 'git rev-parse --abbrev-ref HEAD', returnStdout: true).trim()
 
                 def message = """\
