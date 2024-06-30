@@ -33,7 +33,7 @@ pipeline {
 *Commit Message:* ${commitMessage}
 """
 
-                bat "curl -X POST -H \"Content-Type: application/json\" -d \"{\\\"chat_id\\\":\\\"${CHAT_ID}\\\", \\\"text\\\": \\\"${message}\\\", \\\"parse_mode\\\": \\\"Markdown\\\", \\\"disable_notification\\\": false}\" https://api.telegram.org/bot${TOKEN}/sendMessage"
+                bat label: 'Send Telegram Message', script: """curl -X POST -H "Content-Type: application/json" -d "{\\"chat_id\\":\\"${CHAT_ID}\\", \\"text\\": \\"${message}\\", \\"parse_mode\\": \\"Markdown\\", \\"disable_notification\\": false}" https://api.telegram.org/bot${TOKEN}/sendMessage"""
             }
         }
         failure {
@@ -53,7 +53,7 @@ pipeline {
 *Commit Message:* ${commitMessage}
 """
 
-                bat "curl -X POST -H \"Content-Type: application/json\" -d \"{\\\"chat_id\\\":\\\"${CHAT_ID}\\\", \\\"text\\\": \\\"${message}\\\", \\\"parse_mode\\\": \\\"Markdown\\\", \\\"disable_notification\\\": false}\" https://api.telegram.org/bot${TOKEN}/sendMessage"
+                bat label: 'Send Telegram Message', script: """curl -X POST -H "Content-Type: application/json" -d "{\\"chat_id\\":\\"${CHAT_ID}\\", \\"text\\": \\"${message}\\", \\"parse_mode\\": \\"Markdown\\", \\"disable_notification\\": false}" https://api.telegram.org/bot${TOKEN}/sendMessage"""
             }
         }
     }
