@@ -26,11 +26,11 @@ pipeline {
                 def message = """
                     Build Success Notification
                     ==========================
-                    User Name: ${commitAuthorName}
-                    Email: ${commitAuthorEmail}
-                    Action: Build and Test
-                    Branch: ${branchName}
-                    Commit Message: ${commitMessage}
+                    User Name ${commitAuthorName}
+                    Email ${commitAuthorEmail}
+                    Action Build and Test
+                    Branch ${branchName}
+                    Commit Message ${commitMessage}
                 """.stripIndent().replaceAll('\n', '\\n')
 
                 // Construct JSON payload for Telegram message
