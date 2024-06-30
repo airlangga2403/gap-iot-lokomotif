@@ -23,17 +23,17 @@ pipeline {
                 def commitMessage = sh(script: 'git log -1 --pretty=format:"%s"', returnStdout: true).trim()
                 def branchName = sh(script: 'git rev-parse --abbrev-ref HEAD', returnStdout: true).trim()
 
- def message = """
-*Build Success Notification*
-==========================
-*User Name:* ${commitAuthorName}
-*Email:* ${commitAuthorEmail}
-*Action:* Build and Test
-*Branch:* ${branchName}
-*Commit Message:* ${commitMessage}
-"""
+//  def message = """
+// *Build Success Notification*
+// ==========================
+// *User Name:* ${commitAuthorName}
+// *Email:* ${commitAuthorEmail}
+// *Action:* Build and Test
+// *Branch:* ${branchName}
+// *Commit Message:* ${commitMessage}
+// """
 
-                bat "curl -X POST -H 'Content-Type: application/json' -d '{\"chat_id\":\"${env.CHAT_ID}\", \"text\":\"${message}\", \"parse_mode\":\"Markdown\", \"disable_notification\":false}' https://api.telegram.org/bot${env.TOKEN}/sendMessage"
+                bat "curl -X POST -H 'Content-Type: application/json' -d '{\"chat_id\":\"${env.CHAT_ID}\", \"text\":\"${commitAuthorEmail}\", \"parse_mode\":\"Markdown\", \"disable_notification\":false}' https://api.telegram.org/bot${env.TOKEN}/sendMessage"
             }
         }
         failure {
@@ -43,17 +43,17 @@ pipeline {
                 def commitMessage = sh(script: 'git log -1 --pretty=format:"%s"', returnStdout: true).trim()
                 def branchName = sh(script: 'git rev-parse --abbrev-ref HEAD', returnStdout: true).trim()
 
- def message = """
-*Build Success Notification*
-==========================
-*User Name:* ${commitAuthorName}
-*Email:* ${commitAuthorEmail}
-*Action:* Build and Test
-*Branch:* ${branchName}
-*Commit Message:* ${commitMessage}
-"""
+//  def message = """
+// *Build Success Notification*
+// ==========================
+// *User Name:* ${commitAuthorName}
+// *Email:* ${commitAuthorEmail}
+// *Action:* Build and Test
+// *Branch:* ${branchName}
+// *Commit Message:* ${commitMessage}
+// """
 
-                bat "curl -X POST -H 'Content-Type: application/json' -d '{\"chat_id\":\"${env.CHAT_ID}\", \"text\":\"${message}\", \"parse_mode\":\"Markdown\", \"disable_notification\":false}' https://api.telegram.org/bot${env.TOKEN}/sendMessage"
+                bat "curl -X POST -H 'Content-Type: application/json' -d '{\"chat_id\":\"${env.CHAT_ID}\", \"text\":\"${commitAuthorEmail}\", \"parse_mode\":\"Markdown\", \"disable_notification\":false}' https://api.telegram.org/bot${env.TOKEN}/sendMessage"
             }
         }
     }
