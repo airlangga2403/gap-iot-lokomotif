@@ -30,22 +30,30 @@ pipeline {
                 def branchName = sh(script: 'git rev-parse --abbrev-ref HEAD', returnStdout: true).trim()
                 echo "Branch Name: ${branchName}"
 
-                def message = new StringBuilder()
-                message.append("Build Success Notification\n")
-                message.append("==========================\n")
-                message.append("User Name: ${commitAuthorName}\n")
-                message.append("Email: ${commitAuthorEmail}\n")
-                message.append("Action: Build and Test\n")
-                message.append("Branch: ${branchName}\n")
-                message.append("Commit Message: ${commitMessage}")
-                echo "${message}"
+                def message = """
+                    {
+                        "chat_id": "${CHAT_ID}",
+                        "text": "Build Success Notification\\n==========================\\nUser Name: ${commitAuthorName}\\nEmail: ${commitAuthorEmail}\\nAction: Build and Test\\nBranch: ${branchName}\\nCommit Message: ${commitMessage}",
+                        "disable_notification": false
+                    }
+                """.stripIndent()
 
-                // bat "curl -X POST -H \"Content-Type: application/json\" -d \"{\\\"chat_id\\\":${CHAT_ID}, \\\"text\\\": \\\"${message.toString()}\\\", \\\"disable_notification\\\": false}\" https://api.telegram.org/bot${TOKEN}/sendMessage"
+                // Escaping double quotes and backslashes for JSON in curl command
+                bat "curl -X POST -H \"Content-Type: application/json\" -d '${message}' https://api.telegram.org/bot${TOKEN}/sendMessage"
             }
         }
         failure {
             script {
-                bat "curl -X POST -H \"Content-Type: application/json\" -d \"{\\\"chat_id\\\":${CHAT_ID}, \\\"text\\\": \\\"Pipeline failed!\\\", \\\"disable_notification\\\": false}\" https://api.telegram.org/bot${TOKEN}/sendMessage"
+                def failureMessage = """
+                    {
+                        "chat_id": "${CHAT_ID}",
+                        "text": "Pipeline failed!",
+                        "disable_notification": false
+                    }
+                """.stripIndent()
+
+                // Escaping double quotes and backslashes for JSON in curl command
+                bat "curl -X POST -H \"Content-Type: application/json\" -d '${failureMessage}' https://api.telegram.org/bot${TOKEN}/sendMessage"
             }
         }
     }
