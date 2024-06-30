@@ -23,19 +23,14 @@ pipeline {
                 def commitMessage = bat(script: 'git log -1 --pretty=format:"%s"', returnStdout: true).trim()
                 def branchName = bat(script: 'git rev-parse --abbrev-ref HEAD', returnStdout: true).trim()
 
-                bat label: 'Send Telegram Message', script: """curl -X POST -H "Content-Type: application/json" -d "{\\"chat_id\\":\\"${CHAT_ID}\\", \\"text\\": \\"${commitAuthorName}\\", \\"parse_mode\\": \\"Markdown\\", \\"disable_notification\\": false}" https://api.telegram.org/bot${TOKEN}/sendMessage"""
+                def message = "Pipeline succeeded! Commit author name: ${commitAuthorName}"
+
+                bat "curl -X POST -H \"Content-Type: application/json\" -d \"{\\\"chat_id\\\":${CHAT_ID}, \\\"text\\\": \\\"${message}\\\", \\\"disable_notification\\\": false}\" https://api.telegram.org/bot${TOKEN}/sendMessage"
             }
         }
         failure {
             script {
-                def commitAuthorName = bat(script: 'git log -1 --pretty=format:"%an"', returnStdout: true).trim()
-                def commitAuthorEmail = bat(script: 'git log -1 --pretty=format:"%ae"', returnStdout: true).trim()
-                def commitMessage = bat(script: 'git log -1 --pretty=format:"%s"', returnStdout: true).trim()
-                def branchName = bat(script: 'git rev-parse --abbrev-ref HEAD', returnStdout: true).trim()
-
-
-
-                bat label: 'Send Telegram Message', script: """curl -X POST -H "Content-Type: application/json" -d "{\\"chat_id\\":\\"${CHAT_ID}\\", \\"text\\": \\"${commitAuthorName}\\", \\"disable_notification\\": false}" https://api.telegram.org/bot${TOKEN}/sendMessage"""
+                bat "curl -X POST -H \"Content-Type: application/json\" -d \"{\\\"chat_id\\\":${CHAT_ID}, \\\"text\\\": \\\"Pipeline failed!\\\", \\\"disable_notification\\\": false}\" https://api.telegram.org/bot${TOKEN}/sendMessage"
             }
         }
     }
