@@ -18,18 +18,17 @@ pipeline {
         }
     }
 
-    post {
+ post {
         success {
             script {
-                echo "Build successful."
-                telegramSend(message: "Build success on GitHub by ${env.BUILD_USER}!")
+                // Trigger another pipeline upon success
+                build job: 'telegram-notification' //your pipeline for telegram
             }
         }
         failure {
             script {
-                echo "Build failed."
-                telegramSend(message: "Build failed on GitHub by ${env.BUILD_USER}!")
+                // Trigger another pipeline upon failure
+                build job: 'telegram-notification' //your pipeline for telegram
             }
         }
     }
-}
