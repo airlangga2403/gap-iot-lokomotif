@@ -18,22 +18,26 @@ pipeline {
     post {
         success {
             script {
-                 def commitAuthorName = sh(script: 'git log -1 --pretty=format:"%an"', returnStdout: true).trim()
+                def commitAuthorName = sh(script: 'git log -1 --pretty=format:"%an"', returnStdout: true).trim()
                 def commitAuthorEmail = sh(script: 'git log -1 --pretty=format:"%ae"', returnStdout: true).trim()
                 def commitMessage = sh(script: 'git log -1 --pretty=format:"%s"', returnStdout: true).trim()
                 def branchName = sh(script: 'git rev-parse --abbrev-ref HEAD', returnStdout: true).trim()
 
+                // Constructing multi-line message
                 def message = """
                     Build Success Notification
                     ==========================
-                    User Name ${commitAuthorName}
-                    Email ${commitAuthorEmail}
-                    Action Build and Test
-                    Branch ${branchName}
-                    Commit Message ${commitMessage}
-                """.stripIndent().replaceAll('\n', '\\n')
+                    User Name: ${commitAuthorName}
+                    Email: ${commitAuthorEmail}
+                    Action: Build and Test
+                    Branch: ${branchName}
+                    Commit Message: ${commitMessage}
+                """.stripIndent()
 
-                // Construct JSON payload for Telegram message
+                // Escaping double quotes and backslashes in the message for JSON
+                message = message.replaceAll('"', '\\\\"')
+
+                // Construct JSON payload for curl command
                 def payload = """
                     {
                         "chat_id": "${CHAT_ID}",
@@ -42,13 +46,23 @@ pipeline {
                     }
                 """.stripIndent()
 
-                // Escape double quotes and backslashes in the payload JSON for curl command
-                bat "curl -X POST -H \"Content-Type: application/json\" -d '${payload}' https://api.telegram.org/bot${TOKEN}/sendMessage"
+                // Execute curl command to send the message
+                bat "curl -X POST -H 'Content-Type: application/json' -d '${payload}' https://api.telegram.org/bot${TOKEN}/sendMessage"
             }
         }
         failure {
             script {
-                bat "curl -X POST -H \"Content-Type: application/json\" -d \"{\\\"chat_id\\\":${CHAT_ID}, \\\"text\\\": \\\"Pipeline failed!\\\", \\\"disable_notification\\\": false}\" https://api.telegram.org/bot${TOKEN}/sendMessage"
+                // Construct JSON payload for failure message (if needed)
+                def failureMessage = """
+                    {
+                        "chat_id": "${CHAT_ID}",
+                        "text": "Pipeline failed!",
+                        "disable_notification": false
+                    }
+                """.stripIndent()
+
+                // Execute curl command to send failure message (if needed)
+                bat "curl -X POST -H 'Content-Type: application/json' -d '${failureMessage}' https://api.telegram.org/bot${TOKEN}/sendMessage"
             }
         }
     }
