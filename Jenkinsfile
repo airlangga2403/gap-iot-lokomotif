@@ -38,8 +38,9 @@ pipeline {
                 message.append("Action: Build and Test\n")
                 message.append("Branch: ${branchName}\n")
                 message.append("Commit Message: ${commitMessage}")
+                echo "${message}"
 
-                bat "curl -X POST -H \"Content-Type: application/json\" -d \"{\\\"chat_id\\\":${CHAT_ID}, \\\"text\\\": \\\"${message.toString()}\\\", \\\"disable_notification\\\": false}\" https://api.telegram.org/bot${TOKEN}/sendMessage"
+                // bat "curl -X POST -H \"Content-Type: application/json\" -d \"{\\\"chat_id\\\":${CHAT_ID}, \\\"text\\\": \\\"${message.toString()}\\\", \\\"disable_notification\\\": false}\" https://api.telegram.org/bot${TOKEN}/sendMessage"
             }
         }
         failure {
