@@ -40,8 +40,8 @@ pipeline {
                 message.append("Commit Message ${commitMessage}")
                 echo "${message}"
 
-                // Replace line breaks with \n for JSON compatibility
                 def jsonMessage = message.toString()
+
 
                 bat "curl -X POST -H \"Content-Type: application/json\" -d \"{\\\"chat_id\\\":${CHAT_ID}, \\\"text\\\": \\\"${jsonMessage}\\\", \\\"disable_notification\\\": false}\" https://api.telegram.org/bot${TOKEN}/sendMessage"
             }
